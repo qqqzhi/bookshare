@@ -5,10 +5,13 @@ var express    = require("express"),
     Campground = require("./models/campground"),
     Comment    = require("./models/comment"),
     seedDB     = require("./seeds");
- 
+
+//seedDB();
 mongoose.connect("mongodb://localhost:27017/yelp_camp",  {useNewUrlParser: true});
 app.use(bodyParser.urlencoded({extended : true}));
-//seedDB();
+app.use(express.static(__dirname + "/public"));
+
+
 
 app.get("/", function(req, res) {
 	//res.send("server started")
