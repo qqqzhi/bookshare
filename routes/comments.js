@@ -1,6 +1,5 @@
 var express    = require("express")
 var router = express.Router();
-
 var Campground = require("./../models/campground")
 var Comment = require("./../models/comment")
 var middleware = require("./../middleware")
@@ -27,6 +26,7 @@ router.post("/campgrounds/:id/comments", middleware.isLoggedIn, function(req, re
 			//console.log(req.body.comment);
 			Comment.create(req.body.comment, function(err, comment) {
 				if(err){
+					req.flash("error", "Something is wrong when creating comment")
 					console.log(err);
 				}else{
 					// add username and id to comment
@@ -36,6 +36,7 @@ router.post("/campgrounds/:id/comments", middleware.isLoggedIn, function(req, re
 					campground.comments.push(comment);
 					campground.save();
 					console.log(comment)
+					req.flash("success", "Successfully added comment")
 					res.redirect("/campgrounds/" + campground._id);
 				}
 			})
@@ -71,6 +72,7 @@ router.delete("/campgrounds/:id/comments/:comment_id", middleware.checkCommentOw
 		if(err){
 			res.redirect("back")
 		}else{
+			req.flash("success", "Comment deleted")
 			res.redirect("/campgrounds/" + req.params.id)
 		}
 	})

@@ -5,7 +5,8 @@ var bodyParser    = require('body-parser'),
     mongoose      = require("mongoose"),
     passport      = require("passport"),
     LocalStrategy = require("passport-local"),
-   methodOverride = require("method-override");
+   methodOverride = require("method-override"),
+            flash = require("connect-flash");
         
 var seedDB     = require("./seeds");
 
@@ -23,6 +24,7 @@ mongoose.connect("mongodb://localhost:27017/yelp_camp",  {useNewUrlParser: true}
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"))
+app.use(flash())
 
 // Passport config
 app.use(require("express-session")({
@@ -39,6 +41,8 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use(function(req, res, next){
 	res.locals.currentUser = req.user;
+  	res.locals.error = req.flash("error")
+  	res.locals.success = req.flash("success")
 	next();
 })
 
