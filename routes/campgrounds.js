@@ -18,24 +18,30 @@ router.get("/campgrounds", function(req, res) {
 
 // npm install body-parse --save
 // CREATE route, create a campground
-router.post("/campgrounds", function(req, res) { 
+router.post("/campgrounds", isLoggedIn, function(req, res) { 
 	//res.send("you hit the url");
 	var name = req.body.name;
 	var imageurl = req.body.image;
 	var desc = req.body.description;
-	var newCamp = {name : name, image : imageurl, description : desc};
+	var author = {
+		id : req.user._id,
+		username : req.user.username
+	}
+	var newCamp = {name : name, image : imageurl, description : desc, author : author};
+	//console.log(req.user)
 	//campgrounds.push(newCamp); Now should save to db not the list of campgrounds
 	Campground.create(newCamp, function(err, newlyCreated) {
 		if(err){
 			console.log(err);
 		}else{
+			console.log(newlyCreated);
 			res.redirect("/campgrounds");
 		}
 	});	
 });
 
 // NEW route, display forms to make a new campground
-router.get("/campgrounds/new", function(req, res) {
+router.get("/campgrounds/new", isLoggedIn, function(req, res) {
 	res.render("campgrounds/new.ejs");
 });
 
@@ -46,10 +52,19 @@ router.get("/campgrounds/:id", function(req, res) {
 		if(err){
 			console.log(err);
 		}else{
-			console.log(foundCampgroud);
+			//console.log(foundCampgroud);
 			res.render("campgrounds/show.ejs", {campground : foundCampgroud});
 		}
 	});	
 });
+
+
+function isLoggedIn(req, res, next) {
+	if(req.isAuthenticated()){
+		return next()
+	}
+	res.redirect("/login")
+}
+
 
 module.exports = router;
