@@ -2,6 +2,7 @@ var express    = require("express")
 var router = express.Router();
 
 var Campground = require("./../models/campground")
+var middleware = require("./../middleware")  //因为middleware里用的是index.js，默认就是这个文件
 
 // INDEX route, show all campgrounds
 router.get("/campgrounds", function(req, res) {	
@@ -18,7 +19,7 @@ router.get("/campgrounds", function(req, res) {
 
 // npm install body-parse --save
 // CREATE route, create a campground
-router.post("/campgrounds", isLoggedIn, function(req, res) { 
+router.post("/campgrounds", middleware.isLoggedIn, function(req, res) { 
 	//res.send("you hit the url");
 	var name = req.body.name;
 	var imageurl = req.body.image;
@@ -41,30 +42,51 @@ router.post("/campgrounds", isLoggedIn, function(req, res) {
 });
 
 // NEW route, display forms to make a new campground
-router.get("/campgrounds/new", isLoggedIn, function(req, res) {
+router.get("/campgrounds/new", middleware.isLoggedIn, function(req, res) {
 	res.render("campgrounds/new.ejs");
 });
 
 // SHOW
 router.get("/campgrounds/:id", function(req, res) {
 	// Find the camp with id, render show template with it
-	Campground.findById(req.params.id).populate("comments").exec( function(err, foundCampgroud) {
+	Campground.findById(req.params.id).populate("comments").exec( function(err, foundCampground) {
 		if(err){
 			console.log(err);
 		}else{
-			//console.log(foundCampgroud);
-			res.render("campgrounds/show.ejs", {campground : foundCampgroud});
+			//console.log(foundCampground);
+			res.render("campgrounds/show.ejs", {campground : foundCampground});
 		}
 	});	
 });
 
+// EDIT 
+router.get("/campgrounds/:id/edit", middleware.checkCampgroundOwnership, function(req, res) {
+	Campground.findById(req.params.id, function(err, foundCampground) {
+		res.render("campgrounds/edit.ejs", {campground : foundCampground})
+	})
+})
 
-function isLoggedIn(req, res, next) {
-	if(req.isAuthenticated()){
-		return next()
-	}
-	res.redirect("/login")
-}
+// UPDATE
+router.put("/campgrounds/:id", middleware.checkCampgroundOwnership, function(req, res) {
+	Campground.findByIdAndUpdate(req.params.id, req.body.campground, function(err, updatedCampground) {
+		if(err){
+			res.redirect("/campgrounds")
+		}else{
+			res.redirect("/campgrounds/" + req.params.id)
+		}
+	})
+})
+
+// DELETE
+router.delete("/campgrounds/:id", middleware.checkCampgroundOwnership, function(req, res) {
+	Campground.findByIdAndRemove(req.params.id, function(err) {
+		if(err){
+			res.redirect("/campgrounds")
+		}else{
+			res.redirect("/campgrounds")
+		}
+	})
+})
 
 
 module.exports = router;
