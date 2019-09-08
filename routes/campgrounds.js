@@ -32,6 +32,7 @@ router.post("/campgrounds", isLoggedIn, function(req, res) {
 	var name = req.body.name;
 	var imageurl = req.body.image;
 	var desc = req.body.description;
+	var price = req.body.price;
 	var author = {
 		id : req.user._id,
 		username : req.user.username
@@ -45,7 +46,7 @@ router.post("/campgrounds", isLoggedIn, function(req, res) {
 		var lng = results[0].longitude;
 		var location = results[0].formattedAddress;
 
-		var newCamp = {name : name, image : imageurl, description : desc, author : author, location : location, lat : lat, lng : lng};
+		var newCamp = {name : name, image : imageurl, description : desc, price: price, author : author, location : location, lat : lat, lng : lng};
 		Campground.create(newCamp, function(err, newlyCreated) {
 			if(err){
 				console.log(err);
@@ -91,7 +92,7 @@ router.put("/campgrounds/:id", checkCampgroundOwnership, function(req, res){
 		var lat = data[0].latitude;
 		var lng = data[0].longitude;
 		var location = data[0].formattedAddress;
-		var newCamp = {name: req.body.name, image: req.body.image, description: req.body.description, location: location, lat: lat, lng: lng};
+		var newCamp = {name: req.body.name, image: req.body.image, price: req.body.price, description: req.body.description, location: location, lat: lat, lng: lng};
 		//console.log("newCamp\n", newCamp);
 		//console.log("req.params.id\n",req.params.id);
 		Campground.findByIdAndUpdate(req.params.id, {$set: newCamp}, function(err, campground){
