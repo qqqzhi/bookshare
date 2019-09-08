@@ -1,28 +1,25 @@
-var express    = require("express")
-var router = express.Router()
-var passport = require("passport")
-var User = require("./../models/user")
-var middleware = require("./../middleware")
+var express    = require("express");
+var router = express.Router();
+var passport = require("passport");
+var User = require("./../models/user");
 
 router.get("/", function(req, res) {
-	//res.send("server started")
-	//res.render("landing.ejs")
 	res.redirect("/campgrounds");
-})
+});
 
 // ==========
 // AUTH ROUTE
 // ==========
 router.get("/register", function(req, res) {
-	res.render("register.ejs")
-})
+	res.render("register.ejs");
+});
 
 router.post("/register", function(req, res) {
 	//res.send("Signing up")
-	var newUser = new User({username:req.body.username})
+	var newUser = new User({username:req.body.username});
 	User.register(newUser, req.body.password, function(err, user) {
 		if(err){
-			req.flash("error", err.message)
+			req.flash("error", err.message);
 			return res.render("register.ejs")
 		}else{
 			passport.authenticate("local")(req, res, function() {
@@ -31,12 +28,12 @@ router.post("/register", function(req, res) {
 			})
 		}
 	})
-})
+});
 
 router.get("/login", function(req, res) {
 	//res.render("login.ejs", {message : req.flash("error")})
 	res.render("login.ejs")
-})
+});
 
 //router.post("/login", middleware, callback)
 router.post("/login", passport.authenticate("local", {
@@ -48,9 +45,9 @@ router.post("/login", passport.authenticate("local", {
 
 router.get("/logout", function(req, res) {
 	req.logout();
-	req.flash("success", "You've logged out!")
+	req.flash("success", "You've logged out!");
 	res.redirect("/campgrounds");
-})
+});
 
 module.exports = router;
 
