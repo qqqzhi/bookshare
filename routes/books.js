@@ -13,6 +13,9 @@ var options = {
 };
 var geocoder = NodeGeocoder(options);
 
+var publicIp = require('public-ip');
+var iplocation = require("iplocation").default;
+
 
 // INDEX route, show all books
 router.get("/books", function(req, res) {
@@ -23,6 +26,30 @@ router.get("/books", function(req, res) {
 			res.render("books/index.ejs", {books : foundbooks, currentUser:req.user})
 		}
 	});
+});
+
+// show books nearby
+router.get("/booksnearby", function(req, res) {
+	publicIp.v4()
+		.then(iplocation)
+		.then(function (value) {
+			var lat = value.latitude;
+			var lng = value.longitude;
+			Book.find({
+					$and:[
+						{lat:{$gt:lat-0.5, $lt:lat+0.5}},
+						{lng:{$gt:lng-0.5, $lt:lng+0.5}}
+						]
+				},
+				function(err, foundbooks) {
+					if (err){
+						console.log(err);
+					}else{
+						//res.send(foundbooks);
+						res.render("books/index.ejs", {books : foundbooks, currentUser:req.user})
+					}
+			});
+		});
 });
 
 // CREATE route, create a book
