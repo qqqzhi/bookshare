@@ -1,6 +1,6 @@
 var mongoose = require("mongoose");
-var Campground = require("./models/campground");
-var Comment   = require("./models/comment");
+var Book     = require("./models/book");
+var Comment  = require("./models/comment");
 
 var data = [
     {
@@ -23,14 +23,14 @@ var data = [
 
 
 function seedDB(){
-    Campground.remove({}, function(err){  //删库
+    Book.remove({}, function(err){  //删库
         if(err){
             console.log(err);
         }
         // add some new
         console.log("campgrounds removed");
         // data.forEach(function (seed) {
-        //     Campground.create(seed, function(err, campground) {
+        //     Book.create(seed, function(err, campground) {
         //         if(err){
         //             console.log(err);
         //         }else{

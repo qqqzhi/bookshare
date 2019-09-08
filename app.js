@@ -12,16 +12,16 @@ var flash = require("connect-flash");
 var seedDB     = require("./seeds");
 
 var User       = require("./models/user");
-var Campground = require("./models/campground");
+var Book       = require("./models/book");
 var Comment    = require("./models/comment");
 
-var commentRoutes     = require("./routes/comments");
-var campgroundsRoutes = require("./routes/campgrounds");
 var indexRoutes       = require("./routes/index");
+var booksRoutes       = require("./routes/books");
+var commentRoutes     = require("./routes/comments");
 
 
 //seedDB();
-mongoose.connect("mongodb://localhost:27017/yelp_camp",  {useNewUrlParser: true});
+mongoose.connect("mongodb://localhost:27017/bookshare",  {useNewUrlParser: true});
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
@@ -50,7 +50,7 @@ app.use(function(req, res, next){
 app.locals.moment = require('moment');
 
 app.use(indexRoutes);
-app.use(campgroundsRoutes);
+app.use(booksRoutes);
 app.use(commentRoutes);
 
 

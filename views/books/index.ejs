@@ -7,19 +7,19 @@
 			<h1>Welcome to BookShare</h1>
 			<p>Share Books, Share Knowledge</p>
 			<p>
-				<a class="btn btn-primary btn-lg" href="/campgrounds/new">Add Your Book</a>
+				<a class="btn btn-primary btn-lg" href="/books/new">Add Your Book</a>
 			</p>
 		</div>
 	</header>
 	
 	<div class="row" style="display:flex; flex-wrap: wrap;">
-		<% campgrounds.forEach(function(campground) {	%>
+		<% books.forEach(function(book) {	%>
 			<div class="col-md-3 col-sm-6">
 				<div class="card text-center">
-					<img src="<%= campground.image %>" class="card-img-top">
+					<img src="<%= book.image %>" class="card-img-top">
 					<div class="card-body">
-						<div class="card-title"><%= campground.name %></div>
-						<a href="/campgrounds/<%= campground._id%>" class="btn btn-primary btn-sm">More Info</a>
+						<div class="card-title"><%= book.title %></div>
+						<a href="/books/<%= book._id%>" class="btn btn-primary btn-sm">More Info</a>
 					</div>
 				</div>
 			</div>

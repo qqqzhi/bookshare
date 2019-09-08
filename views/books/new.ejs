@@ -3,9 +3,12 @@
 	<div class="container">
 		<h1 style="text-align: center">Add A New Book</h1>
 		<div style="width: 30%; margin: 30px auto;">
-			<form action="/campgrounds" method='POST'>
+			<form action="/books" method='POST'>
 				<div class="form-group">
-					<input class="form-control" type="text" placeholder="name" name="name">
+					<input class="form-control" type="text" placeholder="title" name="title">
+				</div>
+				<div class="form-group">
+					<input class="form-control" type="text" placeholder="author" name="author">
 				</div>
 				<div class="form-group">
 					<input class="form-control" type="text" placeholder="image url" name="image">
@@ -25,7 +28,7 @@
 					<input class="btn btn-lg btn-primary btn-default btn-block" type="submit">
 				</div>
 			</form>
-			<a href="/campgrounds">go back</a>
+			<a href="/books">go back</a>
 		</div>
 	</div>
 </div>

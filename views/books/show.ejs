@@ -13,39 +13,44 @@
 		</div>
 		<div class="col-md-9">
 			<div class="img-thumbnail">
-				<img class="img-responsive img-fluid" src="<%= campground.image%>">
+				<img class="img-responsive img-fluid" src="<%= book.image%>">
 				<div class="caption-full">
-					<h4 class="float-right">$<%= campground.price%></h4>
-					<h4><a> <%=campground.name%> </a></h4>
-					<p> <%=campground.description%> </p>
-					<p>	<em>Created by: <%= campground.author.username %>, <%= moment(campground.createdAt).fromNow() %></em> </p>
-					<% if(currentUser && campground.author.id.equals(currentUser._id)){ %> <!-- 在app.js 定义了-->
-						<a class = "btn btn-warning" href="/campgrounds/<%=campground._id%>/edit">EDIT</a>
-						<form style="display: inline;" action="/campgrounds/<%=campground._id%>?_method=DELETE" method="POST">
+					<h4 class="float-right">$<%= book.price%></h4>
+					<h4><a> <%=book.title%> </a></h4>
+					<p> <%=book.author%> </p>
+					<p> <%=book.description%> </p>
+					<p>	Created by: <strong><%= book.createdBy.username %></strong>, <em><%= moment(book.createdAt).fromNow() %></em> </p>
+
+					<% if(currentUser && book.createdBy.id.equals(currentUser._id)){ %> <!-- 在app.js 定义了-->
+						<a class = "btn btn-warning" href="/books/<%=book._id%>/edit">EDIT</a>
+						<form style="display: inline;" action="/books/<%=book._id%>?_method=DELETE" method="POST">
 							<button class="btn btn-danger">DELETE</button>
 						</form>
 					<% } %>
+
 				</div>
 			</div>
 			<div class="card card-body">
 				<div class="text-right">
-					<a class="btn btn-success" href="/campgrounds/<%= campground._id%>/comments/new">Add New Comment</a>
+					<a class="btn btn-success" href="/books/<%= book._id%>/comments/new">Add New Comment</a>
 				</div>
 				<hr>
-				<% campground.comments.forEach(function(comment) { %>
+				<% book.comments.forEach(function(comment) { %>
 					<div class="row">
 						<div class="col-md-12" style="margin-bottom: 1em">
-							<strong><%= comment.author.username %></strong>
-							<span class="pull-right"><%= moment(comment.createdAt).fromNow() %></span>
+							Posted by: <strong><%= comment.createdBy.username %></strong>,
+							<span class="pull-right"><em><%= moment(comment.createdAt).fromNow() %></em> </span>
 							<p style="margin-bottom:0"><%= comment.text %></p>
-							<% if(currentUser && comment.author.id.equals(currentUser._id)){ %>
+
+							<% if(currentUser && comment.createdBy.id.equals(currentUser._id)){ %>
 								<span class="float-right">
-									<a class="btn btn-sm btn-warning" href="/campgrounds/<%=campground._id%>/comments/<%=comment._id%>/edit">EDIT</a>
-									<form style="display: inline;" action="/campgrounds/<%=campground._id%>/comments/<%=comment._id%>?_method=DELETE" method="POST">
+									<a class="btn btn-sm btn-warning" href="/books/<%=book._id%>/comments/<%=comment._id%>/edit">EDIT</a>
+									<form style="display: inline;" action="/books/<%=book._id%>/comments/<%=comment._id%>?_method=DELETE" method="POST">
 										<input type="submit" class="btn btn-sm btn-danger" value="Delete">
 									</form>
 								</span>
 							<% } %>
+
 						</div>
 					</div>					
 				<% }) %>
@@ -56,11 +61,11 @@
 
 <script>
 	function initMap() {
-		var lat = <%= campground.lat %>;
-		var lng = <%= campground.lng %>;
+		var lat = <%= book.lat %>;
+		var lng = <%= book.lng %>;
 		var center = {lat : lat, lng : lng};
 		var map = new google.maps.Map(document.getElementById("map"), {zoom : 8, center : center, scrollwheel : false});
-		var contentString = "<strong><%= campground.name %><br/><%= campground.location %></strong><p><%= campground.description %></p>";
+		var contentString = "<strong><%= book.title %><br><%= book.location %></strong><p><%= book.description %></p>";
 		var infowindow = new google.maps.InfoWindow({
 			content: contentString
 		});
