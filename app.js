@@ -47,6 +47,8 @@ app.use(function(req, res, next){
 	next();
 });
 
+app.locals.moment = require('moment');
+
 app.use(indexRoutes);
 app.use(campgroundsRoutes);
 app.use(commentRoutes);
