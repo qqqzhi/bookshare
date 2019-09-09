@@ -100,7 +100,7 @@ router.get("/books/new", isLoggedIn, function(req, res) {
 
 // SHOW
 router.get("/books/:id", function(req, res) {
-	Book.findById(req.params.id).populate("comments").exec( function(err, foundBook) {
+	Book.findById(req.params.id).populate("comments likes").exec( function(err, foundBook) {
 		if(err){
 			console.log(err);
 		}else{
@@ -112,6 +112,9 @@ router.get("/books/:id", function(req, res) {
 // EDIT 
 router.get("/books/:id/edit", checkBookOwnership, function(req, res) {
 	Book.findById(req.params.id, function(err, foundBook) {
+		if(err){
+			return res.redirect('back');
+		}
 		res.render("books/edit.ejs", {book : foundBook})
 	})
 })
@@ -150,7 +153,32 @@ router.put("/books/:id", checkBookOwnership, function(req, res){
 	});
 });
 
-
+// Like
+router.post("/books/:id/like", isLoggedIn, function(req, res){
+	Book.findById(req.params.id,function (err, foundBook) {
+		if(err){
+			return res.redirect("/books");
+		}
+		var foundUserLike = foundBook.likes.some(function (id) {
+			return id.equals(req.user._id);
+		});
+		if (foundUserLike) {
+			// user already liked, removing like
+			foundBook.likes.pull(req.user._id);
+		} else {
+			// adding the new user like
+			// console.log(req.user) //{ _id: 5d753c7b9d041e5f54148476, username: 'q', __v: 0 }
+			foundBook.likes.push(req.user);
+		}
+		foundBook.save(function (err) {
+			if (err) {
+				console.log(err);
+				return res.redirect("/books");
+			}
+			return res.redirect("/books/" + foundBook._id);
+		});
+	})
+});
 
 // DELETE
 router.delete("/books/:id", checkBookOwnership, function(req, res) {
