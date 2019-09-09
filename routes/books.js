@@ -1,6 +1,7 @@
 var express    = require("express");
 var router = express.Router();
 var Book = require("./../models/book");
+var User = require("./../models/user");
 
 
 var NodeGeocoder = require("node-geocoder");
@@ -46,11 +47,24 @@ router.get("/booksnearby", function(req, res) {
 						console.log(err);
 					}else{
 						//res.send(foundbooks);
-						res.render("books/index.ejs", {books : foundbooks, currentUser:req.user})
+						res.render("books/index.ejs", {books : foundbooks, currentUser:req.user});
 					}
 			});
 		});
 });
+
+// show books liked
+router.get("/mylikes", isLoggedIn, function(req, res) {
+	User.findById(req.user._id).populate({path:"likes"}).exec(function(err, foundUser) {
+		if(err){
+			console.log(err);
+		}else{
+			//console.log(foundUser.likes);
+			res.render("books/index.ejs", {books : foundUser.likes, currentUser:req.user});
+		}
+	});
+});
+
 
 // CREATE route, create a book
 router.post("/books", isLoggedIn, function(req, res) {
@@ -168,10 +182,20 @@ router.post("/books/:id/like", isLoggedIn, function(req, res){
 		if (foundUserLike) {
 			// user already liked, removing like
 			foundBook.likes.pull(req.user._id);
+			User.findByIdAndUpdate(req.user._id, { $pull : {likes : foundBook.id}}, function(err){
+				if(err){
+					return res.redirect("/books");
+				}
+			});
 		} else {
 			// adding the new user like
 			// console.log(req.user) //{ _id: 5d753c7b9d041e5f54148476, username: 'q', __v: 0 }
 			foundBook.likes.push(req.user);
+			User.findByIdAndUpdate(req.user._id, { $push : {likes : foundBook.id}}, function(err){
+				if(err){
+					return res.redirect("/books");
+				}
+			});
 		}
 		foundBook.save(function (err) {
 			if (err) {
@@ -180,7 +204,7 @@ router.post("/books/:id/like", isLoggedIn, function(req, res){
 			}
 			return res.redirect("/books/" + foundBook._id);
 		});
-	})
+	});
 });
 
 // DELETE
