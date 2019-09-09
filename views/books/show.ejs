@@ -24,12 +24,12 @@
 						<div class="btn-group" role="group">
 
 							<% if (currentUser && book.likes.some(function (like) {	return like.equals(currentUser._id)	})) { %>
-								<button type="submit" class="btn btn-sm btn-outline-primary">
-									<i class="fa fa-heart"></i> Liked (<%= book.likes.length %>)
+								<button type="submit" class="btn btn-sm btn-primary">
+									<i class="fa fa-heart"></i> Liked <span class="badge badge-light"><%= book.likes.length %></span>
 								</button>
 							<% } else { %>
-								<button type="submit" class="btn btn-sm btn-outline-primary">
-									<i class="fa fa-heart"></i> Like (<%= book.likes.length %>)
+								<button type="submit" class="btn btn-sm btn-primary">
+									<i class="fa fa-heart"></i> Like <span class="badge badge-light"><%= book.likes.length %></span>
 								</button>
 							<% } %>
 
@@ -96,7 +96,7 @@
 				<% }else{ %>
 					Liked by:<br>
 					<% book.likes.forEach(function(like) { %>
-						<%= like.username %>
+						<i class="fa fa-user"></i>  <%= like.username %>
 						<% }); %>
 				<% } %>
 			</div>

@@ -57,6 +57,7 @@ router.post("/books", isLoggedIn, function(req, res) {
 	var title = req.body.title;
 	var imageurl = req.body.image;
 	var description = req.body.description;
+	var category = req.body.category;
 	var price = req.body.price;
 	var author = req.body.author;
 	var createdBy = {
@@ -76,6 +77,7 @@ router.post("/books", isLoggedIn, function(req, res) {
 			title : title,
 			image : imageurl,
 			description : description,
+			category : category,
 			price: price,
 			author : author,
 			createdBy : createdBy,
@@ -135,6 +137,7 @@ router.put("/books/:id", checkBookOwnership, function(req, res){
 			author : req.body.author,
 			image: req.body.image,
 			price: req.body.price,
+			category: req.body.category,
 			description: req.body.description,
 			location: location,
 			lat: lat,

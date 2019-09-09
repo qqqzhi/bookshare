@@ -21,7 +21,7 @@
 					<div class="card-body">
 						<div class="card-title"><%= book.title %></div>
 						<div style="margin-bottom: 4px">
-							Liked <i class="fa fa-heart-o"></i> by <%= book.likes.length %>
+							Liked <i class="fa fa-heart-o"></i> by <span class="badge badge-primary"><%= book.likes.length %></span>
 						</div>
 						<a href="/books/<%= book._id%>" class="btn btn-primary btn-sm">More Info</a>
 					</div>

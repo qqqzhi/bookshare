@@ -11,8 +11,9 @@ var BookSchema = new mongoose.Schema({
 	lng: Number,
 	price: Number,
 	author: String,
+	category: [String],
 	createdAt: { type: Date, default: Date.now },
-	createdBy:{
+	createdBy: {
 		id:{
 			type:mongoose.Schema.Types.ObjectId,
 			ref:"User"
