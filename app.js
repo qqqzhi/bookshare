@@ -21,7 +21,7 @@ var commentRoutes     = require("./routes/comments");
 
 
 //seedDB();
-mongoose.connect("mongodb://localhost:27017/bookshare",  {useNewUrlParser: true});
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/bookshare",  {useNewUrlParser: true});
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
@@ -53,7 +53,7 @@ app.use(indexRoutes);
 app.use(booksRoutes);
 app.use(commentRoutes);
 
-
-app.listen(5000, function() {
+var port = process.env.PORT || 5000;
+app.listen(port, function() {
 	console.log("server started")
 });
